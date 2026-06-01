@@ -107,10 +107,7 @@ if IS_PRODUCTION:
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('MYSQL_URL'),
-            conn_max_age=600,
-            ssl_config={'ssl_mode': 'required'
-                        
-                        }
+            conn_max_age=600
         )
     }
     DATABASES['default']['OPTIONS'] = {
