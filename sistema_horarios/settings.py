@@ -108,7 +108,7 @@ if IS_PRODUCTION:
         'default': dj_database_url.config(
             default=os.environ.get('MYSQL_URL'),
             conn_max_age=600,
-            ssl_require=True
+            ssl_config={'ssl_mode': 'required'}
         )
     }
 else:
