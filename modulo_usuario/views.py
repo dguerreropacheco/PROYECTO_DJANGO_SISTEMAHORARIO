@@ -19,7 +19,7 @@ def registro_view(request):
         nuevo_user.save()
         return redirect('login') 
 
-    return render(request, 'modulo_usuario/templates/registro.html')
+    return render(request, 'registro.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -33,4 +33,4 @@ def login_view(request):
         else:
             return render(request, 'login.html', {'error': 'Usuario o contraseña incorrectos'})
             
-    return render(request, 'modulo_usuario/templates/login.html')
+    return render(request, 'login.html')
