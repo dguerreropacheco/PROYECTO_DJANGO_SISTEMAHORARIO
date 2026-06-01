@@ -44,14 +44,12 @@ Sistema de Gestión de Horarios para Docentes
 - Reportes.
 ---
 
-## 💻 Cómo ejecutar el proyecto
-
 ## Cómo ejecutar el proyecto
 
 - Crear y activar el venv
--py -3 -m venv .venv
--.venv/Scripts/activate
--pip install requirements.txt
+- py -3 -m venv .venv
+- .venv/Scripts/activate
+- pip install requirements.txt
 
 ## ▶️ Despliegue
 
