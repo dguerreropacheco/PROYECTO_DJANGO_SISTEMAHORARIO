@@ -1,12 +1,13 @@
-# Sistema de Gestión de Horarios para Docentes
-
+<h1 align="center">
+Sistema de Gestión de Horarios para Docentes
+</h1>
 <p align="center">
-  <img src="https://w7.pngwing.com/pngs/119/322/png-transparent-django-logo-django-project-web-framework-web-development.png" width="200" alt="Django Logo">
+  <img src="https://www.djangoproject.com/m/img/logos/django-logo-positive.png" width="200" alt="Django Logo">
   <img src="https://1000marcas.net/wp-content/uploads/2020/11/Python-logo.png" width="200" alt="Python Logo">
 </p>
 
 <p align="center">
-  Proyecto académico web desarrollado con <strong>Python (Django)</strong>, orientado a la gestión eficiente de horarios para docentes en instituciones educativas. Desarrollado en equipo para el curso de <strong>Ingeniería y Calidad de Software</strong>.
+  Proyecto académico web desarrollado con <strong>Python (Django)</strong>, orientado a la gestión eficiente de horarios para docentes en instituciones educativas, en equipo para el curso de <strong>Ingeniería y Calidad de Software</strong>.
 </p>
 
 ---
@@ -14,7 +15,6 @@
 ## 🎯 Impacto del proyecto
 
 -  Automatización del proceso de programar horarios a docentes.
--  Mejora en la organización administrativa de la institución al centralizar la información.
 -  Aplicación de buenas prácticas de ingeniería de software para asegurar un sistema escalable y mantenible.
 
 ---
@@ -62,6 +62,5 @@ pip install requirements.txt
 <img width="1533" height="752" alt="image" src="https://github.com/user-attachments/assets/d22ab694-a2c0-41e0-aa37-32deac1bf97d" />
 
 -Puede acceder, registrarse y navegar por el proyecto.
-
 
 
