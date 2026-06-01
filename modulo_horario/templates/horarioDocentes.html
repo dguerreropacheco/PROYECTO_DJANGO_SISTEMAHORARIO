@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Horario por docente{% endblock %}
+
+{% block content %}
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+                      
+                          <div class="box-tittle">
+                              <button type="button" class="regresarBtn">
+                                  <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                              </button>
+                              <h3 id="titulo" style="margin-left: 20px; display: inline;">HORARIO POR DOCENTE</h3>
+                          
+                          </div>
+
+                          
+                          <form method="POST" action="{% url 'horarioDocente' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label style="display: inline;">Docente:</label>
+                                    <select name="docente_sel" class="form-control" style="width: 400px; display: inline;">
+                                      {% if horas_sin_asignar %}
+                                        {% for curso, horas in horas_sin_asignar.items %}
+                                            {% if curso in cursos_sin_horario %}
+                                            <li>{{ curso.nombre_curso }} (Horas sin asignar: {{ horas }})</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                        {% for docente in docentes %}
+                                            <option value="{{ docente.id }}" {% if docente_id == docente.id %}selected{% endif %}>
+                                                {{ docente.doc_nombres }} {{ docente.doc_apellidos }}  
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                        
+                                    <input type="hidden" name="docente_id" value="{{ docente_id|default_if_none:'' }}">
+                                    <button type="submit" class="btnVer" style="display: inline;">Ver Horario</button>
+                                </div>
+                            </div>
+                        </form>
+                    
+                        {% if horario %}
+                        <table class="table table-bordered mt-4 text-center">
+                          <thead >
+                            <tr>
+                              <th style="background-color: #e8ebf1;color: blue;font-weight:normal;font-size: 14px;">Hora</th>
+                              {% for dia in dias_semana %}
+                              <th style="background-color: #e8ebf1;color: blue; font-weight:normal; font-size: 14px;">{{ dia }}</th>
+                              {% endfor %}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for hora, hora_id in horas %}  
+                            <tr>
+                              <td class="horario-cell" style="width: 10;background-color: #e8ebf1; color: blue;font-size: 14px; padding: 0px; align-items: center; justify-content: center;">
+                                <div class="hora-container" style="margin-bottom: 90px;">
+                                  <p class="hora-original" style="margin-bottom: 90px;display: inline;" >{{ hora }} - </p>
+                                  <p class="hora-aumentada" style="margin-bottom: 90px; display: inline;"></p>
+                                  
+                              </div>
+                              </td>                           
+                              
+                              {% for dia in dias_semana %}
+                              <td class="horario-cell" style="width: 20%; height: auto ;padding: 0px; text-align: center; margin: 0px;">
+                                {% for disp in horario %}
+                                {% if disp.0 == dia and disp.1 <= hora and disp.2 > hora %}
+
+                                <div style="background-color: rgb(241, 225, 14); width: 100%; height: 100%; box-sizing: border-box;  margin: 0px;" data-horario-id="{{ disp.7 }}">
+                                  <p style="font-size: 12px;  margin: 0px;"> 
+                                    <br>
+                                    {{ disp.4 }} 
+                                    <br>
+                                    ({{ disp.6}} ciclo - Grupo {{ disp.5 }})</p>
+                                    <p style="font-size: 12px; margin: 0px;" > SIS </p>
+                                    <br>
+                                    <p style="background-color: blue; color: white; font-size: 12px;  margin: 0px;">Presencial</p>
+                                    <br>
+                                    <p style="font-size: 12px; margin: 0px; color:rgb(22, 22, 213)" > {{ disp.3 }}</p> 
+                                    <br>
+                                </div>
+                                     
+
+                                  {% endif %}
+                                  {% endfor %}
+                              </td>
+                              {% endfor %}
+                            </tr>
+                               {% endfor %}
+                          </tbody>
+                        </table>
+                        {% else %}
+                        {% endif %}
+                        <br>
+                        <br>
+                        <br>
+
+                        </div>
+                    
+                      </div>                      
+                    </div>
+
+                  </div>
+            </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <!-- Modal -->
+<div class="modal fade" id="accionModal" tabindex="-1" role="dialog" aria-labelledby="accionModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="accionModalLabel">Acción Requerida</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Desea eliminar o modificar?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="eliminarBtn">Eliminar</button>
+        <button type="button" class="btn btn-primary" id="modificarBtn">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+$(document).ready(function() {
+    // Iterar sobre cada .horario-cell
+    $('.horario-cell').each(function() {
+        // Obtener la hora original desde el texto del primer párrafo
+        var horaOriginal = $(this).find('.hora-original').text();
+
+        // Separar las horas y minutos
+        var partesHora = horaOriginal.split(':');
+        var horas = parseInt(partesHora[0], 10);
+        var minutos = parseInt(partesHora[1], 10);
+
+        // Sumar una hora
+        horas = horas + 1;
+
+        // Formatear nuevamente la hora (asegurándonos de mantener el formato de 24 horas)
+        var horaAumentada = ('0' + horas).slice(-2) + ':' + ('0' + minutos).slice(-2);
+
+        // Actualizar el texto de la hora aumentada en el segundo párrafo dentro de .hora-container
+        $(this).find('.hora-aumentada').text(horaAumentada);
+    });
+});
+
+$(document).ready(function() {
+    $('.horario-cell div').click(function() { 
+        $('#accionModal').modal('show');
+        var horarioId = $(this).data('horario-id'); 
+        $('#eliminarBtn').data('horario-id', horarioId);
+        // Puedes agregar aquí más acciones para mostrar información en el modal
+    });
+
+    $('#eliminarBtn').click(function() {
+        var horarioId = $(this).data('horario-id');
+        // Redirigir a la URL de eliminación
+        window.location.href = '/eliminarHorario/' + horarioId;
+    });
+
+  // Manejar clic en botón Modificar
+  $('#modificarBtn').click(function() {
+    // Lógica para modificar
+    console.log('Modificar');
+    $('#accionModal').modal('hide');
+  });
+});
+    </script>
+{% endblock %}

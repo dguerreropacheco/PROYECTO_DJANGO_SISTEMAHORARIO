@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+<div class="col d-flex flex-column h-sm-100">
+  <main class="row overflow-auto">
+    <div class="container-fluid">
+      <div class="row g-3 p-3 justify-content-center">
+
+        <div class="col-12 col-lg-6">
+          <div class="card h-100" style="transform: scale(0.95);">
+            <div class="card-header">
+              <h5 class="text-white mb-0" style="font-size: 17px;">HORARIO</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-0">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img src="https://st2.depositphotos.com/15813590/43006/v/450/depositphotos_430067658-stock-illustration-calendar-icon-vector-symbol-web.jpg"
+                       class="img-fluid" style="max-width: 85%;" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <ul class="mb-2">
+                    <li><a href="/gestionarGrupoHorario">Gestionar grupo horario</a></li>
+                    <li><a href="/gestionarHorario">Gestionar horario</a></li>
+                  </ul>
+                  <a class="btn btn-outline-danger btnVer mt-2" href="menuHorario">Ver reportes</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="card h-100" style="transform: scale(0.95);">
+            <div class="card-header">
+              <h5 class="text-white mb-0" style="font-size: 17px;">CURSO</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-0">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img src="https://st4.depositphotos.com/17553142/21582/v/950/depositphotos_215829712-stock-illustration-open-book-vector-simple-icon.jpg"
+                       class="img-fluid" style="max-width: 65%;margin-left: 20px;" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <ul class="mb-2">
+                    <li><a href="/gestionarCurso">Gestionar curso</a></li>
+                    <li><a href="/grupoHorario">Asignar grupo horario a curso</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="card h-100" style="transform: scale(0.95);">
+            <div class="card-header">
+              <h5 class="text-white mb-0" style="font-size: 17px;">DOCENTE</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-0">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img src="https://cdn-icons-png.flaticon.com/512/104/104602.png"
+                       class="img-fluid" style="max-width: 65%; margin-left: 20px;" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <ul class="mb-2">
+                    <li><a href="/gestionarDocente">Gestionar docente</a></li>
+                    <li><a href="/asignacionCargaLectiva">Asignar docente a grupo horario</a></li>
+                    <li><a href="/csv">Importar disponibilidad docente</a></li>
+                  </ul>
+                  <a href="menuDocente" class="btn btn-outline-danger btnVer mt-2">Ver reportes</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="card h-100" style="transform: scale(0.95);">
+            <div class="card-header">
+              <h5 class="text-white mb-0" style="font-size: 17px;">AMBIENTE</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-0">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img src="https://cdn-icons-png.flaticon.com/512/5138/5138915.png"
+                       class="img-fluid" style="max-width: 60%;margin-left: 20px;" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <ul class="mb-2">
+                    <li><a href="/gestionarAmbiente">Gestionar ambiente</a></li>
+                    <li><a href="/asignarAmbiente">Asignar ambiente a escuela</a></li>
+                    <li><a href="/csvAmbientes">Importar ambientes</a></li>
+                  </ul>
+                  <a href="menuAmbiente" class="btn btn-outline-danger btnVer mt-2">Ver reportes</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Eliminar docente{% endblock %}
+
+{% block content %}
+          <div class="col d-flex flex-column h-sm-100">
+            <main class="row overflow-auto">
+              <div class="container-fluid col">
+                <div class="px-lg-2 mx-lg-2 py-0 my-0">
+  
+                  <div class="container-fluid m-0 p-0">
+  
+                    <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+  
+                      <div class="container justify-content-center">
+                        <div class="container">
+  
+  
+                          <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+  
+  
+                            <!-- TÍTULO -->
+                        
+                            <div class="box-tittle">
+                                <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarDocente' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                                </button>
+                                <h3 id="titulo" style="margin-left: 20px; display: inline;">ELIMINAR DOCENTE</h3>
+                            
+                            </div>
+  
+                          <br>
+                          <br>   
+
+                          <div class="container">
+                            <div>
+                                <p>Está a punto de eliminar al docente: <strong>{{ docente.0 }}</strong></p>
+                                <p>¿Está seguro de que desea proceder?</p>
+                                
+                                <p>{{ msj }}</p>
+                                <ul>
+                                    {% for datod in dg %}
+                                    - {{ datod.1 }} {{ datod.2 }} - 
+                                     {% endfor %}
+                                </ul>
+                                <p>{{ msj2 }}</p>
+                                <ul>
+                                    {% for dato in dds %}
+                                     - {{ dato.3 }} {{ dato.1 }} {{ dato.2 }} -
+                                    {% endfor %}
+                                </ul>
+                                <br>
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="respuesta" value="1"> 
+
+                                <div style="text-align: right;">
+                                  <button type="button" class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarDocente' %}'">Cancelar</button>
+                                  <button type="submit" class="btnVer" > Confirmar Eliminación</button>
+                                </div>
+                            </form>
+                        </div>                  
+                        
+                        </div>
+                      
+                        </div>                      
+                      </div>
+  
+                    </div>
+              </div>
+            </main>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+{% endblock %}

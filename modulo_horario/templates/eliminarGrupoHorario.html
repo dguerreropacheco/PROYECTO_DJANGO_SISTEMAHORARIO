@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Eliminar grupo horario{% endblock %}
+
+{% block content %}
+
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub"
+                          style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+
+                          <div class="box-tittle">
+                            <button type="button" class="regresarBtn">
+                              <a href="{% url 'gestionarGrupoHorario' %}"><img id="closeicon"
+                                  src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                            </button>
+                            <h3 id="titulo" style="margin-left: 20px; display: inline;">ELIMINAR GRUPO HORARIO</h3>
+
+                          </div>
+
+                          <br>
+                          <br>
+
+                          <div class="container">
+
+                            <p>Está a punto de eliminar el grupo horario : <strong>{{ grupo.grupo }}</strong> con capacidad <strong> {{ grupo.capacidad }} </strong> y ciclo <strong>"{{ grupo.fk_ciclo }}" </strong>  </p>
+                                <p>¿Está seguro de que desea proceder?</p>
+                                
+                                
+
+                            <!--
+                            <h1>Eliminar Grupo Horario</h1>
+                            <p>¿Estás seguro que deseas eliminar el grupo horario str "{{ grupo.grupo }}" con capacidad "{{
+                              grupo.capacidad }}" y ciclo "{{ grupo.fk_ciclo }}"?</p>
+                            -->
+                            <form method="post">
+                              {% csrf_token %}
+                              <button class="btnVer" type="submit" name="respuesta" value="1">Eliminar</button>
+                              
+                              <a href="{% url 'gestionarGrupoHorario' %}" class="btnCancel">Cancelar</a>
+                            </form>
+                          
+                        
+                          </div>
+
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

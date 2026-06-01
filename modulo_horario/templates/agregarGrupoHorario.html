@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Agregar grupo horario{% endblock %}
+
+{% block content %}
+        
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+                      
+                          <div class="box-tittle">
+                              <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarGrupoHorario' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                              </button>
+                              <h3 id="titulo" style="margin-left: 20px; display: inline;">AGREGAR GRUPO HORARIO</h3>
+                          
+                          </div>
+
+                        <br>
+                        <br>                             
+                        
+                        <form method="post">
+                          {% csrf_token %}
+                          <div class="col-md-6">
+                            <label for="grupo" class="form-label">Grupo:</label>
+                                <input type="text" class="form-control" name="grupo" id="grupo" style="text-transform:uppercase;" value="" onkeyup="javascript:this.value=this.value.toUpperCase();" required pattern="[A-Za-z]" title="Solo se permiten letras">
+                          </div>
+                          
+                        <div class="col-md-6">
+                          <label for="capacidad" class="form-label">Capacidad:</label>
+                          <input type="number" class="form-control" id="capacidad" name="capacidad" required pattern="[0-50]{2}$">
+                        </div>
+
+                      <div class="col-md-6">
+                        <label for="ciclo" class="form-label">Ciclo:</label>
+                        <select class="form-select" id="ciclo" name="ciclo" style="font-size: 15px;"  required>
+                          {% for ciclo in ciclos %}
+                          <option value="{{ ciclo }}">{{ ciclo }}
+                          </option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                  
+                        <div class="col-md-6">
+                          <label for="curso" class="form-label">curso:</label>
+                          <select class="form-select" id="curso" name="curso" style="font-size: 15px;" required>
+                            {% for curso in cursos %}
+                            <option value="{{ curso }}">{{ curso }}
+                            </option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                          
+                        <div class="col-12" style="text-align: right;">
+                          <br>
+                          <button class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarGrupoHorario' %}'">Cancelar</button>
+                          <button type="submit" class="btnVer">Guardar</button>
+                      </div>
+                      </form>
+                      
+                        </div>
+                    
+                      </div>                      
+                    </div>
+
+                  </div>
+            </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  {% endblock %}
+
+ {% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('estado');
+    const hiddenInput = document.querySelector('input[name="estado"]');
+    
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            hiddenInput.value = 'D'; 
+        } else {
+            hiddenInput.value = 'I'; 
+        }
+    });
+});
+
+    </script>
+
+    {% endblock %}
+
+

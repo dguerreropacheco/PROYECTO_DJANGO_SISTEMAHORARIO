@@ -1,0 +1,515 @@
+{% extends "base.html" %}
+
+{% block title %}Asignar carga lectiva{% endblock %}
+
+{% block content %}
+
+    <div class="col d-flex flex-column h-sm-100" style="background-color: #e8ebf1;">
+        <main class="row overflow-auto">
+          <div class="container-fluid col"> 
+            
+    <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: 560px; border-radius: 5px;">
+
+
+        <!-- TÍTULO -->
+    
+        <div class="box-tittle">
+            <button type="button" class="regresarBtn">
+                                  <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+            </button>
+            <h3 id="titulo" style="margin-left: 20px;">ASIGNAR DOCENTE A GRUPO HORARIO</h3>
+        </div>
+    
+        <!-- SELECCIONA SEMESTRE, SELECCIONA ESCUELA Y BUSCAR CURSO -->
+    
+        <div class="box-form">
+    
+            <form id="form_lectiva" method="post" action="{% url 'asignacionCargaLectiva' %}">
+               
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    
+                    <div class="col-md-4"  >
+                        <label for="ciclo_ac">Semestre: </label>
+                        <select name="ciclo_ac" id="ciclo_ac">
+                            <option value="">Selecciona un semestre</option>
+                            {% for ciclo in ciclo_select %}
+                            <option value="{{ ciclo }}" {% if ciclo == ciclo_seleccionado %}selected{% endif %}>
+                                {{ ciclo }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4" style="padding-top: 25px;">
+                        <label for="esc">Escuela: </label>
+                        <select name="esc" id="esc">
+                            <option value="">Selecciona una escuela</option>
+                            {% for escuela in escuela_select %}
+                            <option value="{{ escuela.nombre_escuela }}" {% if escuela.nombre_escuela == escuela_seleccionada%}selected{% endif %}>{{ escuela.nombre_escuela }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="col-md-4"  style="margin-top: 25px; margin-bottom: 20px; ">
+                        <label for="buscarCurso">Curso:</label>
+                        <input type="text" id="filtro" placeholder="Buscar curso">
+    
+                        <button type="button" id="limpiarBtn">
+                            <img id="closeicon" src="/static/iconos/close.jpg" width="20" height="20">
+                        </button>
+                    </div>
+    
+                </div>
+    
+            </form>
+        </div>
+        
+        <!-- TABLA  -->
+    
+        <div id="boxTabla" style="height: 300px; overflow-y: auto;">
+    
+            <table class="table" id="tabla">
+    
+                <thead class="encabezado" style=" position: sticky; top: 0; z-index: 1; background-color: #E33439;">
+                    <tr>
+                        <th scope="col" style="background-color: #E33439; color: #fff;">CÓDIGO DEL CURSO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff;">CICLO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 30%;">NOMBRE DEL CURSO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff;">GRUPO HORARIO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff;">DOCENTE</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    {% for curso in cursos %}
+                    <tr>
+                        <td id="codigo">{{ curso.0 }}</td>
+                        <td id="ciclo">{{ curso.1 }}</td>
+                        <td id="curso">{{ curso.2 }}</td>
+                        <td id="grupo">{{ curso.3 }}</td>
+                        <td id="docente">
+    
+                            <textarea class="textarea-as-input" disabled>{{ curso.4 }} </textarea>
+                            <button type="button" class="seleccionarDocenteBtn" data-docente="{{ curso.4 }}" data-id="{{ curso.5 }}" style="margin-left: 10px;">
+                                <img id="closeicon" src="/static/iconos/selecciondocente.png" width="20" height="20">
+                            </button>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+    
+            </table>
+    
+        </div>
+    
+        
+        </div>           
+          </div>
+        </main>
+    </div>
+        </div>
+
+    </div>
+    
+    <!-- MODAL -->
+
+    <div class="modal fade" id="modalDocentes" >
+
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" style="width: 440px;">
+
+                <div class="modal-header">
+                    <label class="modal-title" id="modalTitulo">Asignar docente</label>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: #fff;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" style="padding: 30px;">
+                    
+                    <form style="margin-left: 5px;">
+                        
+                        <label for="myInput">Buscar docente:</label>
+                        <input id="myInput" autocomplete="off" style="width: 350px; display: block;">
+
+                        <datalist id="listadoDocentesDep">
+                        </datalist>
+
+                        <br>
+                        <label id="seleccionados"> Seleccionados: </label>
+                        <div id="detallesDoc"></div>
+                        <br>
+
+                    </form>
+
+                    <form method="post" id="form_asignados">
+                        {% csrf_token %}
+
+                        <div class="btngroup" style="margin-right: 22px; text-align: right;">
+
+                        <button type="button" class="btnCancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="bt1" type="submit" class="btnGuardar">Guardar</button>
+                        
+                        </div>      
+                
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+
+
+<script>
+
+//////// SELECCIONAR CICLO, ESCUELA Y FILTRAR //////////
+
+//Enviar datos de ciclo y escuela seleccionada por parte de formulario
+document.addEventListener('DOMContentLoaded', function() {
+    var cicloSelector = document.getElementById('ciclo_ac');
+    var escuelaSelector = document.getElementById('esc');
+    var form = document.getElementById('form_lectiva');
+
+    cicloSelector.addEventListener('change', function () {
+        if (escuelaSelector.value !== '') {
+            form.submit();
+        }
+    });
+
+    escuelaSelector.addEventListener('change', function () {
+        if (cicloSelector.value !== '') {
+            form.submit();
+        }
+    });
+});
+
+
+//Filtrado para buscar curso
+document.addEventListener('DOMContentLoaded', function() {
+    var filtroInput = document.getElementById("filtro");
+    var limpiarBtn = document.getElementById("limpiarBtn");
+    var tabla = document.querySelector(".table");
+    var nombreColumnaIndex = 2; 
+
+    function filtrarTabla() {
+        var filtro = filtroInput.value.toLowerCase();
+        var filas = tabla.getElementsByTagName("tr");
+        
+        for (var i = 0; i < filas.length; i++) {
+            var celdaNombre = filas[i].getElementsByTagName("td")[nombreColumnaIndex];
+            if (celdaNombre) {
+                var textoCelda = celdaNombre.innerText.toLowerCase();
+                var fila = filas[i];
+                if (textoCelda.indexOf(filtro) > -1) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
+            }
+        }
+    }
+
+    filtroInput.addEventListener("keyup", filtrarTabla);
+
+    limpiarBtn.addEventListener("click", function() {
+        filtroInput.value = ""; 
+        filtrarTabla(); 
+    });
+    
+});
+
+
+//////// MODAL //////////
+
+//Botón para seleccionar docentes a asignar
+
+$(document).ready(function(){
+    $('.seleccionarDocenteBtn').click(function(){
+        $('.seleccionarDocenteBtn').removeClass('clicked'); 
+        $(this).addClass('clicked'); 
+    });
+});
+
+
+//Al seleccionar el botón agregar al modal los datos
+
+var seleccionarDocenteBtns = document.querySelectorAll(".seleccionarDocenteBtn");
+seleccionarDocenteBtns.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        var filaCurso = this.closest("tr");
+        var curso = filaCurso.querySelector("td:nth-child(3)").textContent;
+        var grupo = filaCurso.querySelector("td:nth-child(4)").textContent;
+        var docentes = filaCurso.querySelector("td:nth-child(5)").textContent;
+        var seleccionados = document.getElementById('seleccionados');
+
+        var modalTitulo = document.querySelector("#modalDocentes .modal-title");
+        modalTitulo.textContent = "Asignar docente para " + curso + " (" + grupo + ")";
+
+        var detallesCursoDiv = document.createElement('div');
+
+        var docentesArray = this.dataset.docente.split(',');
+
+        var docentesSeleccionados = [];
+
+docentesArray.forEach(function(docenteName) {
+
+    if (docenteName.trim() !== "No tiene docente asignado" && docenteName.trim() !== "") {
+        var docenteInput = document.createElement('input');
+        docenteInput.type = 'text';
+        docenteInput.value = docenteName.trim();
+        docenteInput.disabled = true;
+        docenteInput.style.width = '350px';
+        docenteInput.classList.add('docenteAsignados');
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "x";
+        button.className = "limpiarInputBtn";
+        button.style.border = 'none';
+        button.style.backgroundColor = 'white';
+        button.style.outline = 'none';
+        button.classList.add('buttonAsignados');
+
+        button.addEventListener("click", function() {
+            var index = docentesSeleccionados.indexOf(docenteName.trim());
+            if (index !== -1) {
+                docentesSeleccionados.splice(index, 1);
+            }
+            detallesCursoDiv.removeChild(docenteInput);
+            detallesCursoDiv.removeChild(button);
+        });
+
+        detallesCursoDiv.appendChild(docenteInput);
+        detallesCursoDiv.appendChild(button);
+
+        docentesSeleccionados.push(docenteName.trim());
+    }
+});
+
+
+
+        // Actualizar el atributo data-docente del botón de selección de docente con la lista de seleccionados
+        this.dataset.docente = docentesSeleccionados.join(',');
+
+        // Agregar el contenedor de detalles del curso al modal
+        seleccionados.parentNode.insertBefore(detallesCursoDiv, seleccionados.nextSibling);
+
+        // Mostrar el modal
+        $("#modalDocentes").modal("show");
+    });
+});
+
+
+//Crear el datalist con los docentes por dep
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const input = document.getElementById('myInput');
+
+        input.addEventListener('input', function () {
+            const value = input.value;
+
+            let datalist = document.createElement('datalist');
+            datalist.id = 'listadoDocentesDep';
+
+
+            {% for docente in docentes %}
+
+            var id = {{ docente.1 }}  ; 
+            docenteOptionElement = id.toString();
+            docenteOptionElement = document.createElement('option');
+            docenteOptionElement.value = "{{ docente.0 }}";
+            datalist.appendChild(docenteOptionElement);
+
+        {% endfor %}
+
+        input.parentNode.replaceChild(datalist, document.getElementById('listadoDocentesDep'));
+
+        input.setAttribute('list', 'listadoDocentesDep');
+    });
+
+    input.addEventListener('change', function () {
+        setTimeout(function () {
+            document.getElementById('listadoDocentesDep').innerHTML = '';
+        }, 10);
+    });
+});
+
+
+//Crear input y su botón de borrar después de seleccionar elemento del datalist
+document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('myInput');
+    var dataList = document.getElementById('listadoDocentesDep');
+    var labelSelec = document.getElementById('seleccionados');
+
+    input.addEventListener('input', function () {
+        if (!input.list.querySelector('option[value="' + input.value + '"]')) {
+            return;
+        }
+
+        var docenteSeleccionadoDiv = document.createElement('div');
+        docenteSeleccionadoDiv.classList.add('docente-seleccionado-container');
+
+        var docenteSeleccionadoInput = document.createElement('input');
+        docenteSeleccionadoInput.type = 'text';
+        docenteSeleccionadoInput.value = input.value;
+        docenteSeleccionadoInput.disabled = true;
+        docenteSeleccionadoInput.style.width= '350px';
+        docenteSeleccionadoDiv.style.margin= '0px';
+        docenteSeleccionadoInput.style.margin= '0px';
+        docenteSeleccionadoInput.classList.add('docente-seleccionado');
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "x";
+        button.className = "limpiarInputBtn";
+        button.style.border='none'
+        button.style.backgroundColor= 'white'
+        button.style.outline='none'
+
+        button.addEventListener("click", function() {
+            docenteSeleccionadoDiv.remove();
+        });
+
+        docenteSeleccionadoDiv.appendChild(docenteSeleccionadoInput);
+        docenteSeleccionadoDiv.appendChild(button);
+
+        labelSelec.parentNode.insertBefore(docenteSeleccionadoDiv, labelSelec.nextSibling);
+        input.value = "";
+    });
+});
+
+
+
+//Al presionar botón Cancelar se limpie 
+document.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelector('.btnCancelar').addEventListener('click', function() {
+
+        document.getElementById('myInput').value = '';
+
+        var seleccionados = document.querySelectorAll('.docente-seleccionado-container');
+        seleccionados.forEach(function(element) {
+            element.remove();
+        });
+
+        var asignados = document.querySelectorAll('.docenteAsignados');
+        asignados.forEach(function(element) {
+            element.remove();
+        });
+
+        var asignados = document.querySelectorAll('.buttonAsignados');
+        asignados.forEach(function(element) {
+            element.remove();
+        });
+    });
+});
+
+
+//Al presionar botón Close del modal se limpie 
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.close').addEventListener('click', function() {
+
+        document.getElementById('myInput').value = '';
+
+        var seleccionados = document.querySelectorAll('.docente-seleccionado-container');
+        seleccionados.forEach(function(element) {
+            element.remove();
+        });
+
+        var asignados = document.querySelectorAll('.docenteAsignados');
+        asignados.forEach(function(element) {
+            element.remove();
+        });
+
+        var asignados = document.querySelectorAll('.buttonAsignados');
+        asignados.forEach(function(element) {
+            element.remove();
+        });
+    });
+});
+
+
+//Enviar docentes asignados
+var guardarBtn = document.getElementById("bt1");
+
+guardarBtn.addEventListener("click", function() {
+
+    var docenteSeleccionadosenModal = document.querySelectorAll("#modalDocentes .docente-seleccionado");
+    var docentesGuardadosenBD = document.querySelectorAll("#modalDocentes .docenteAsignados");
+
+    var grupoid = document.querySelector(".seleccionarDocenteBtn.clicked").dataset.id;
+    
+    var cicloSeleccionado = document.getElementById("ciclo_ac").value;
+    var escuelaSeleccionada = document.getElementById("esc").value;
+
+    var hiddenCicloInput = document.createElement('input');
+    hiddenCicloInput.type = 'hidden';
+    hiddenCicloInput.name = 'ciclo_seleccionado';
+    hiddenCicloInput.value = cicloSeleccionado;
+
+    var hiddenEscuelaInput = document.createElement('input');
+    hiddenEscuelaInput.type = 'hidden';
+    hiddenEscuelaInput.name = 'escuela_seleccionada';
+    hiddenEscuelaInput.value = escuelaSeleccionada;
+
+    var hiddenIdInput = document.createElement('input');
+    hiddenIdInput.type = 'hidden';
+    hiddenIdInput.name = 'grupoid'; 
+    hiddenIdInput.value = grupoid; 
+
+    var valoresDocentes = [];
+
+    docenteSeleccionadosenModal.forEach(function(input) {
+        valoresDocentes.push(input.value);
+    });
+
+    docentesGuardadosenBD.forEach(function(input) {
+        valoresDocentes.push(input.value);
+    });
+
+
+    var hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'docentes';
+    hiddenInput.value = valoresDocentes.join(',');
+
+    var formulario = document.getElementById('form_asignados'); 
+    formulario.appendChild(hiddenInput);
+    formulario.appendChild(hiddenIdInput);
+    
+    formulario.appendChild(hiddenCicloInput);
+    formulario.appendChild(hiddenEscuelaInput);
+
+    //Enviar el formulario
+    formulario.submit();
+});
+
+
+</script>
+
+
+{% endblock %}

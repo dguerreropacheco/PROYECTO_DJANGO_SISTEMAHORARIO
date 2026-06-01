@@ -1,0 +1,631 @@
+{% extends "base.html" %}
+
+{% block title %}Asignar ambiente{% endblock %}
+
+{% block content %}
+                <div class="col d-flex flex-column h-sm-100">
+                    <main class="row overflow-auto">
+                        <div class="container-fluid col">
+    
+        <br>
+                            <form class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                                <div class="container-fluid m-0 p-0">
+
+                                    <div class="row align-items-center mx-0 px-0"
+                                        style="overflow-x: hidden; margin-top: 5px; margin-bottom: 20;">
+
+                                        <div class="container justify-content-center">
+
+                                            <div class="row">
+                                              
+                                                <section class="content-info"
+                                                    style="margin-top: 5px; margin-bottom: 30px">
+                                                    <div class="container">
+                                                        
+                                                        <div class="card mb-3">
+                                                            <div class="card-body">
+                                                                <div class="box-tittle">
+                                                                    <button type="button" class="regresarBtn">
+                                                                        <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                                                                    </button>
+                                                                    <h3 id="titulo" style="margin-left: 20px;">ASIGNAR AMBIENTE A ESCUELA</h3>
+                                                                    <br>
+                                                                    <br>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <h5 class="card-title" style="display: inline;" >Semestre:</h5>
+                                                                        <select class="m-2 w-50" name="semestre"
+                                                                            id="listSemestre" style="display: inline;"  required>
+                                                                            <option value="0" selected disabled>
+                                                                                Seleccionar Semestre</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <h5 class="card-title" style="display: inline;" >Escuela:</h5>
+                                                                        <select class="m-2 w-75" name="escuela"
+                                                                            id="listEscuelaProfesional" style="display: inline;"  required>
+                                                                            <option value="0" selected disabled>
+                                                                                Seleccionar Escuela Profesional</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                        <ul class="nav nav-tabs" id="navTabs"></ul>
+                                                                        <div id="listasContenido"></div>
+                                                                        <hr>
+                                                                        <div class="botones">
+                                                                            <div class="d-flex justify-content-end gap-2">
+                                                                                <button type="button" class="btn btn-secondary btnCancelar" style="background-color: #181B22;">Cancelar</button>
+                                                                                <button type="button" class="btn btn-success btnGuardar">Guardar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                        <h3>Resumen de Aulas Asignadas</h3>
+                                                                        <div style="overflow-x:auto; max-height:580px; overflow-y:auto;">
+                                                                            <table id="resumenAsignaciones" class="table table-striped table-bordered"></table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">Por favor, seleccione un ambiente y escuela para antes de la asignacion.</div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="successModalLabel">Éxito</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body" id="successModalBody">Proceso guardado correctamente.</div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </main>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    let ambientesSeleccionados = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+       
+        fetch('/obtener-semestre/')
+            .then(response => response.json())
+            .then(data => {
+                const selectElement = document.getElementById('listSemestre');
+                data.forEach(semestre => {
+                    const option = document.createElement('option');
+                    option.value = semestre.id;
+                    option.textContent = semestre.cic_año + ' - ' + semestre.cic_semestre;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        fetchResumenAsignaciones();
+        fetch('/obtener-escuelas/')
+            .then(response => response.json())
+            .then(data => {
+                const selectElement = document.getElementById('listEscuelaProfesional');
+                data.forEach(escuela => {
+                    const option = document.createElement('option');
+                    option.value = escuela.id;
+                    option.textContent = escuela.nombre_escuela;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        document.getElementById('listSemestre').addEventListener('change', fetchAmbientes);
+        document.getElementById('listEscuelaProfesional').addEventListener('change', fetchAmbientes);
+/*fetch('/datos-reporte/')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.FK_escuela__nombre_escuela);
+                const valores = data.map(item => item.total);
+
+                const ctx = document.getElementById('ambientesPorEscuelaChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Número de Ambientes',
+                            data: valores,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+  
+       
+    })*/
+
+        fetch('/obtener-edificios-ambientes/')
+            .then(response => response.json())
+            .then(data => {
+                const navTabs = document.getElementById('navTabs');
+                const listasContenido = document.getElementById('listasContenido');
+                navTabs.innerHTML = ''; // Clear existing content
+                listasContenido.innerHTML = ''; // Clear existing content
+
+                data.forEach((edificio, index) => {
+                    // Create the tab
+                    const li = document.createElement('li');
+                    li.classList.add('nav-item');
+                    const a = document.createElement('a');
+                    a.classList.add('nav-link');
+                    if (index === 0) a.classList.add('active');
+                    a.href = '#';
+                    a.textContent = edificio.nombre_edificio;
+                    a.onclick = function () {
+                        mostrarContenido(`contenidoList${index + 1}`, this);
+                    };
+                    li.appendChild(a);
+                    navTabs.appendChild(li);
+
+                    // Create the content list
+                    const contenidoDiv = document.createElement('div');
+                    contenidoDiv.id = `contenidoList${index + 1}`;
+                    contenidoDiv.classList.add('contenido');
+                    contenidoDiv.style.display = index === 0 ? 'block' : 'none';
+
+                    // Group ambientes by piso
+                    const pisos = {};
+                    edificio.ambientes.forEach(ambiente => {
+                        if (!pisos[ambiente.piso]) pisos[ambiente.piso] = [];
+                        pisos[ambiente.piso].push(ambiente);
+                    });
+
+                    Object.keys(pisos).forEach(piso => {
+                        const pisoDiv = document.createElement('div');
+                        pisoDiv.classList.add(`piso${piso}`, 'mb-3', 'mt-2');
+                        const pisoTitle = document.createElement('h5');
+                        pisoTitle.classList.add('card-title');
+                        pisoTitle.textContent = `Piso ${piso}:`;
+                        pisoDiv.appendChild(pisoTitle);
+
+                        const listaDiv = document.createElement('div');
+                        listaDiv.classList.add('lista', 'd-flex', 'flex-wrap', 'gap-2');
+
+                        pisos[piso].forEach(ambiente => {
+                            console.log(ambiente)
+                            const ambienteDiv = document.createElement('div');
+                            ambienteDiv.classList.add('border', 'p-2', 'd-flex', 'justify-content-center', 'flex-column');
+
+                            const id = document.createElement('h5');
+                            id.classList.add('id');
+                            id.classList.add('d-none');
+                            id.textContent = ambiente.id;
+                            ambienteDiv.appendChild(id);
+
+                            const nombre = document.createElement('h5');
+                            nombre.classList.add('nombre');
+                            nombre.textContent = ambiente.nombre_ambiente;
+                            ambienteDiv.appendChild(nombre);
+
+                            const capacidad = document.createElement('p');
+                            capacidad.classList.add('capacidad', 'rounded', 'bg-primary', 'text-white', 'p-1', 'text-center');
+                            capacidad.textContent = `Aforo (${ambiente.capacidad_ambiente})`;
+                            ambienteDiv.appendChild(capacidad);
+
+                            const button = document.createElement('button');
+                            button.classList.add('btnAmbiente', 'btn', 'btn-success');
+                            button.type = 'button';
+                            button.textContent = '+';
+                            ambienteDiv.appendChild(button);
+
+                            listaDiv.appendChild(ambienteDiv);
+                        });
+
+                        pisoDiv.appendChild(listaDiv);
+                        contenidoDiv.appendChild(pisoDiv);
+                    });
+
+                    listasContenido.appendChild(contenidoDiv);
+                });
+                manejarEventosAmbiente();
+                guardarAmbientes(ambientesSeleccionados);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+
+    });
+    
+    function fetchResumenAsignaciones() {
+    fetch('/resumen-asignaciones/')
+        .then(response => response.json())
+        .then(data => {
+            const resumenTable = document.getElementById('resumenAsignaciones');
+            resumenTable.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos elementos
+
+            // Estructurar los datos por escuela
+            const escuelas = {};
+            data.forEach(item => {
+                const escuelaNombre = item['FK_escuela__nombre_escuela'];
+                const ambienteNombre = item['FK_ambiente__nombre_ambiente'];
+
+                if (!escuelas[escuelaNombre]) {
+                    escuelas[escuelaNombre] = [];
+                }
+                escuelas[escuelaNombre].push(ambienteNombre);
+            });
+
+            // Crear el encabezado de la tabla
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            Object.keys(escuelas).forEach(escuelaNombre => {
+                const th = document.createElement('th');
+                th.textContent = escuelaNombre;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            resumenTable.appendChild(thead);
+
+            // Crear el cuerpo de la tabla
+            const tbody = document.createElement('tbody');
+            const maxAmbientes = Math.max(...Object.values(escuelas).map(aulas => aulas.length));
+
+            for (let i = 0; i < maxAmbientes; i++) {
+                const row = document.createElement('tr');
+                Object.keys(escuelas).forEach(escuelaNombre => {
+                    const td = document.createElement('td');
+                    td.textContent = escuelas[escuelaNombre][i] || '';
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            }
+            resumenTable.appendChild(tbody);
+        })
+        .catch(error => console.error('Error fetching resumen:', error));
+}
+
+
+function manejarEventosAmbiente() {
+    const botonesAmbiente = document.querySelectorAll('.btnAmbiente');
+    botonesAmbiente.forEach(boton => {
+        boton.addEventListener('click', function () {
+            const idAmbiente = this.parentNode.querySelector('.id').textContent;
+            if (this.classList.contains('btn-success')) {
+                ambientesSeleccionados.push(idAmbiente);
+                this.textContent = '-';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-danger');
+                btnGuardar.disabled = false;
+                
+            } else {
+                const index = ambientesSeleccionados.indexOf(idAmbiente);
+                            ambientesSeleccionados.splice(index, 1);
+                            this.textContent = '+';
+                            this.classList.remove('btn-danger');
+                            this.classList.add('btn-success');
+                            //btnGuardar.disabled = true;
+                            const todosNoAsignados = Array.from(botonesAmbiente).every(b => b.classList.contains('btn-success'));
+                            btnGuardar.disabled = todosNoAsignados;
+            }
+            //btnGuardar.disabled = false;
+        });
+    });
+}
+const btnGuardar = document.querySelector('.btnGuardar');
+btnGuardar.disabled = true;
+manejarEventosAmbiente();
+    function mostrarContenido(idContenido, boton) {
+    var contenidos = document.getElementsByClassName('contenido');
+    for (var i = 0; i < contenidos.length; i++) {
+        contenidos[i].style.display = 'none';
+    }
+
+    var contenidoMostrar = document.getElementById(idContenido);
+    if (contenidoMostrar) {
+        contenidoMostrar.style.display = 'block';
+    }
+
+    var botones = document.querySelectorAll('.nav-link');
+    for (var i = 0; i < botones.length; i++) {
+        botones[i].classList.remove('active');
+    }
+    boton.classList.add('active');
+}
+function desmarcarTarjetas() {
+    // Vaciamos la lista de ambientes seleccionados
+    ambientesSeleccionados = [];
+    // Seleccionamos todos los botones de ambiente
+    const botones = document.querySelectorAll('.btnAmbiente');
+    // Iteramos sobre cada botón
+    botones.forEach(boton => {
+        // Si el botón está marcado (en rojo), lo cambiamos a verde
+        if (boton.classList.contains('btn-danger')) {
+            boton.classList.remove('btn-danger');
+            boton.classList.add('btn-success');
+            boton.textContent = '+';
+        }
+    });
+    
+}
+
+document.querySelector('.btnCancelar').addEventListener('click', desmarcarTarjetas);
+
+    function fetchAmbientes() {
+    const semestre = document.getElementById('listSemestre').value;
+    const escuela = document.getElementById('listEscuelaProfesional').value;
+    if (semestre !== '0' && escuela !== '0') {
+        fetch('/obtener-edificios-ambientes-selected/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ semestre: semestre, escuela: escuela })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const navTabs = document.getElementById('navTabs');
+                const listasContenido = document.getElementById('listasContenido');
+                navTabs.innerHTML = '';
+                listasContenido.innerHTML = '';
+                data.forEach((edificio, index) => {
+                    const li = document.createElement('li');
+                    li.classList.add('nav-item');
+                    const a = document.createElement('a');
+                    a.classList.add('nav-link');
+                    if (index === 0) a.classList.add('active');
+                    a.href = '#';
+                    a.textContent = edificio.nombre_edificio;
+                    a.onclick = function () {
+                        mostrarContenido(`contenidoList${index + 1}`, this);
+                    };
+                    li.appendChild(a);
+                    navTabs.appendChild(li);
+                    const contenidoDiv = document.createElement('div');
+                    contenidoDiv.id = `contenidoList${index + 1}`;
+                    contenidoDiv.classList.add('contenido');
+                    contenidoDiv.style.display = index === 0 ? 'block' : 'none';
+                    const pisos = {};
+                    edificio.ambientes.forEach(ambiente => {
+                        if (!pisos[ambiente.piso]) pisos[ambiente.piso] = [];
+                        pisos[ambiente.piso].push(ambiente);
+                    });
+                    Object.keys(pisos).forEach(piso => {
+                        const pisoDiv = document.createElement('div');
+                        pisoDiv.classList.add(`piso${piso}`, 'mb-3', 'mt-2');
+                        const pisoTitle = document.createElement('h5');
+                        pisoTitle.classList.add('card-title');
+                        pisoTitle.textContent = `Piso ${piso}:`;
+                        pisoDiv.appendChild(pisoTitle);
+                        const listaDiv = document.createElement('div');
+                        listaDiv.classList.add('lista', 'd-flex', 'flex-wrap', 'gap-2');
+                        pisos[piso].forEach(ambiente => {
+                            const ambienteDiv = document.createElement('div');
+                            ambienteDiv.classList.add('border', 'p-2', 'd-flex', 'justify-content-center', 'flex-column', 'ambiente');
+                            const id = document.createElement('h5');
+                            id.classList.add('id', 'd-none');
+                            id.textContent = ambiente.id;
+                            ambienteDiv.appendChild(id);
+                            const nombre = document.createElement('h5');
+                            nombre.classList.add('nombre');
+                            nombre.textContent = ambiente.nombre_ambiente;
+                            ambienteDiv.appendChild(nombre);
+                            const capacidad = document.createElement('p');
+                            capacidad.classList.add('capacidad', 'rounded', 'bg-primary', 'text-white', 'p-1', 'text-center');
+                            capacidad.textContent = `Aforo (${ambiente.capacidad_ambiente})`;
+                            ambienteDiv.appendChild(capacidad);
+                            const button = document.createElement('button');
+                            button.classList.add('btnAmbiente', 'btn', 'btn-success');
+                            button.type = 'button';
+                            if (ambiente.estado === 'ocupado') {
+                                button.classList.remove('btn-success');
+                                button.classList.add('btn-danger');
+                                button.textContent = '-';
+                                
+                            } else {
+                                button.textContent = '+';
+                            }
+                            ambienteDiv.appendChild(button);
+                            listaDiv.appendChild(ambienteDiv);
+                        });
+                        pisoDiv.appendChild(listaDiv);
+                        contenidoDiv.appendChild(pisoDiv);
+                    });
+                    listasContenido.appendChild(contenidoDiv);
+                });
+                manejarEventosAmbiente();
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+}
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
+
+    const selectElement = document.getElementById('listEscuelaProfesional');
+
+    selectElement.addEventListener('change', function () {
+        const selectedEscuelaId = this.value;
+        fetch(`/obtener-cursos/${selectedEscuelaId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const cursoSelect = document.getElementById('listCursos');
+                data.forEach(curso => {
+                    const option = document.createElement('option');
+                    option.value = curso.id;
+                    option.textContent = `${curso.codigo_curso} - ${curso.nombre_curso} `;
+                    cursoSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+
+</script>
+
+<script>
+    function guardarAmbientes() {
+        const btnGuardar = document.querySelector('.btnGuardar');
+        btnGuardar.addEventListener('click', function () {
+            const semestre = document.getElementById('listSemestre').value;
+            const escuela = document.getElementById('listEscuelaProfesional').value;
+            const listAmbi = obtenerListaAmbientes(); // La lista de ambientes seleccionados que has almacenado en JavaScript
+            if (semestre === '0' || escuela === '0') {
+                    // Mostrar el modal de error si no se ha seleccionado un semestre o escuela
+                    var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+            } else {
+            // Enviar la solicitud POST al servidor
+            fetch('/guardar-ambientes-seleccionados/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de tener el token CSRF disponible en tu plantilla
+                },
+                body: JSON.stringify({
+                    id_escuela: escuela,
+                    id_semestre: semestre,
+                    ambientes_seleccionados: listAmbi
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // Aquí puedes manejar la respuesta del servidor
+                    if (data.status === 'success') {
+                        fetchAmbientes();
+                        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                        successModal.show();
+                        btnGuardar.disabled = true;
+                                 // Limpiar la lista de seleccionados
+                                fetchResumenAsignaciones();
+                                fetchAmbientes();
+                    } else {
+                        console.error('Error:', data);
+                    }
+                })
+
+                .catch(error => console.error('Error:', error));
+            }
+
+        });
+        
+
+    }
+
+    function obtenerListaAmbientes() {
+        const listambientesSeleccionados = [];
+        const ambienteDivs = document.querySelectorAll('.ambiente');
+
+        ambienteDivs.forEach(ambienteDiv => {
+            const id = ambienteDiv.querySelector('.id').textContent; // Obtiene el ID del ambiente
+            const button = ambienteDiv.querySelector('.btnAmbiente'); // Obtiene el botón asociado al ambiente
+            let buttonClasses;
+
+            if (button.classList.contains('btn-success')) {
+                buttonClasses = 'success';
+                
+            } else if (button.classList.contains('btn-danger')) {
+                buttonClasses = 'danger';
+            }
+
+            listambientesSeleccionados.push({ id: id, buttonClasses: buttonClasses }); // Añade el objeto a la lista
+        });
+        return listambientesSeleccionados;
+    }
+    desmarcarTarjetas()
+    function verificarSeleccion() {
+        const button = ambienteDiv.querySelector('.btnAmbiente');    
+        const semestreSeleccionado = document.getElementById('listSemestre').value !== '0';
+            const escuelaSeleccionada = document.getElementById('listEscuelaProfesional').value == 'Medicina';
+            const ambienteSeleccionado = button.classList.contains('btn-success');
+
+            const btnGuardar = document.querySelector('.btnGuardar');
+            if (escuelaSeleccionada) {
+                btnGuardar.disabled = false;
+            } else {
+                btnGuardar.disabled = true;
+            }
+        }
+
+       
+
+</script>
+
+{% endblock %}

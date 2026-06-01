@@ -1,0 +1,152 @@
+
+     {% extends "base.html" %}
+
+{% block title %}Modificar ambiente{% endblock %}
+
+{% block content %}     
+          <div class="col d-flex flex-column h-sm-100">
+            <main class="row overflow-auto">
+              <div class="container-fluid col">
+                <div class="px-lg-2 mx-lg-2 py-0 my-0">
+  
+                  <div class="container-fluid m-0 p-0">
+  
+                    <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+  
+                      <div class="container justify-content-center">
+                        <div class="container">
+  
+  
+                          <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+  
+  
+                            <!-- TÍTULO -->
+                        
+                            <div class="box-tittle">
+                                <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarAmbiente' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                                </button>
+                                <h3 id="titulo" style="margin-left: 20px; display: inline;">MODIFICAR AMBIENTE</h3>
+                            
+                            </div>
+  
+                          <br>
+                          <br>                             
+                        
+                        
+                          <form class="row g-3" method="post" autocomplete="off">
+  
+                            {% csrf_token %}
+
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"  style="text-transform:uppercase;" value="{{docente.0.0}}"  onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+        
+        
+                            <div class="col-md-6">
+                                <label for="capacidad" class="form-label">Capacidad:</label>
+                                <input type="number" class="form-control" id="capacidad" name="capacidad" value="{{docente.0.1}}">
+                            </div>
+
+                            
+                            <div class="col-md-6">
+                                <label for="edificio" class="form-label">Edificio:</label>
+                                <select class="form-select" id="edificio" name="edificio" style="font-size: 15px;"  required>
+                                    {% for am in ambs %}
+                                    <option value="{{ am }}">{{ am }}
+                                    </option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="piso" class="form-label">Piso:</label>
+                              <input type="number" class="form-control" id="piso" name="piso" value="{{docente.0.2}}" required>
+                          </div>
+            
+                            <div class="col-md-6">
+                                <label for="tipoambiente" class="form-label">Tipo de ambiente:</label>
+                                <select class="form-select" id="tipoambiente" name="tipoambiente" style="font-size: 15px;"  required>
+                                  {% for ta in tpas %}
+                                  <option value="{{ ta }}">{{ ta }}
+                                  </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="col-md-6">
+                              <br>
+                              <label class="form-check-label" for="estado">Estado: </label> 
+                              <input type="checkbox" class="form-check-input" id="estado" name="estado"
+                                  {% if docente.0.5 == 'D' %} checked {% endif %} style="height: 20px; width: 20px;">
+                              <input type="hidden" name="estado" value="{{docente.0.5}}"> 
+                            </div>
+              
+                              <div class="col-12" style="text-align: right;">
+                                <br>
+                                <button class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarAmbiente' %}'">Cancelar</button>
+                                <button type="submit" class="btnVer">Modificar</button>
+                              </div>
+              
+                          </form>
+                          
+                        
+                        
+                        </div>
+                      
+                        </div>                      
+                      </div>
+  
+                    </div>
+              </div>
+            </main>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+{% endblock %}
+
+   {% block extra_js %}
+
+<script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('estado');
+    const hiddenInput = document.querySelector('input[name="estado"][type="hidden"]');
+    
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            hiddenInput.value = 'D'; 
+        } else {
+            hiddenInput.value = 'I'; 
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const contratoSelect = document.getElementById('edificio');
+    const tipoContrato = '{{docente.0.3}}';
+
+    // Seleccionar el tipo de contrato automáticamente
+    if (tipoContrato) {
+        contratoSelect.value = tipoContrato;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const contratoSelect = document.getElementById('tipoambiente');
+    const tipoContrato = '{{docente.0.4}}';
+
+    // Seleccionar el tipo de contrato automáticamente
+    if (tipoContrato) {
+        contratoSelect.value = tipoContrato;
+    }
+});
+
+</script>
+
+{% endblock %}

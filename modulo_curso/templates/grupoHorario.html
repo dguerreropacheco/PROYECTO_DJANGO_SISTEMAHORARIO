@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Gestionar grupo horario{% endblock %}
+
+{% block content %}
+
+    <div class="col d-flex flex-column h-sm-100" style="background-color: #e8ebf1;">
+        <main class="row overflow-auto">
+          <div class="container-fluid col"> 
+            
+    <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: 560px; border-radius: 5px;">
+
+
+        <!-- TÍTULO -->
+    
+        <div class="box-tittle">
+            <button type="button" class="regresarBtn">
+                <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+            </button>
+            <h3 id="titulo" style="margin-left: 20px;">ASIGNAR GRUPO HORARIO A CURSO</h3>
+        
+        </div>
+    
+        <!-- SELECCIONA ESCUELA Y PLAN DE ESTUDIO -->
+    
+        <section class="content-info" style="margin-top: 30px; margin-bottom: 10px">
+            <div class="container">
+                <div class="row">
+    
+                    <form class="col-md-12" id="form_cursos" method="post" action="{% url 'grupoHorario' %}">
+                        {% csrf_token %}
+                        
+                        <div class="col-md-6" style="display: inline; margin-left: 15px;" >
+                            <label>Escuela: </label>
+                            <select name="escuela" id="escuela" style="display: inline; width: 400px;">
+                                <option value="">Selecciona una Escuela</option>
+                                {% for esc in escuela %}
+                                    <option value="{{ esc.nombre_escuela }}"
+                                            {% if esc.nombre_escuela == escuela_select %}selected{% endif %}>{{ esc.nombre_escuela }}
+                                    </option>
+                                {% endfor %}
+    
+                            </select>
+                        </div>
+                        <div class="col-md-6" style="display: inline; margin-left: 150px;">
+                            <label>Plan de estudio: </label>
+                            <select name="plan_estudio" id="plan_estudio" style="display: inline; width: 400px;">
+                                <option value="">Selecciona un plan de estudio</option>
+                                {% for plan in plan_estudio %}
+                                    <option value="{{ plan.plan_nombre }}"
+                                            {% if plan.plan_nombre == plan_select %}selected{% endif %}>{{ plan.plan_nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- Tabla para los cursos -->
+                    <div class="col-md-16">
+                            
+        <div id="boxTabla" style="height: 375px; overflow-y: auto; ">
+    
+            <table class="table" id="tabla">
+    
+                <thead class="encabezado" style=" position: sticky; top: 0; z-index: 1; background-color: #E33439;">
+                    <tr>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 20%;">CÓDIGO DEL CURSO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 10%;">CICLO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 30%;">NOMBRE DEL CURSO</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 10%;">GRUPOS HORARIOS</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 20%;">ASIGNAR</th>
+                        <th scope="col" style="background-color: #E33439; color: #fff; width: 10%;">                   
+                           <input type="checkbox" id="selectAll"> 
+                        </th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                   
+                        {% for curso in cursos %}
+                            <tr>
+                                <td style="text-align: center;">{{ curso.codigo_curso }}</td>
+                                <td style="text-align: center;">{{ curso.ciclo_curso }}</td>
+                                <td>{{ curso.nombre_curso }}</td>
+                                <td>{{ curso.grupos }}</td>
+                                <td><input type="number" name="cantidad_{{ curso.id }}" class="number-input" value="0" min="0" step="1"></td>
+                                <td><input type="checkbox" name="seleccionado_{{ curso.id }}" class="course-checkbox" onclick="toggleInput(this)"></td>
+                        {% endfor %}
+                        
+                </tbody>
+    
+            </table>
+    
+        </div>
+
+                    </div>
+                    <br> 
+                    <div class="button-container" style="text-align: right;">
+                      <button type="submit" class="btnVer">Enviar</button>
+                    </div>
+                    </form>
+                </div>
+                
+            </div>
+        </section>
+    
+
+        {% endblock %}
+
+          {% block extra_js %}
+
+        <script>
+            document.getElementById('escuela').addEventListener('change', function () {
+                document.getElementById('plan_estudio').innerHTML = '<option value="">Selecciona un plan de estudio</option>';
+                document.getElementById('form_cursos').submit();
+            });
+    
+            document.getElementById('plan_estudio').addEventListener('change', function () {
+                document.getElementById('form_cursos').submit();
+            });
+
+            function toggleInput(checkbox) {
+            var input = checkbox.parentElement.previousElementSibling.querySelector('input[type="number"]');
+            if (checkbox.checked) {
+                input.value = 1;
+            } else {
+                input.value = 0;
+            }
+        }
+
+        document.getElementById('selectAll').addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('.course-checkbox');
+            var numberInputs = document.querySelectorAll('.number-input');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+            for (var input of numberInputs) {
+                input.value = this.checked ? 1 : 0;
+            }
+        });
+
+        </script>
+        
+   
+
+    <!-- COMPLEMENTOS -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+
+
+{% endblock %}

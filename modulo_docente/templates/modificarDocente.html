@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Modificar docente{% endblock %}
+
+{% block content %}
+
+          <div class="col d-flex flex-column h-sm-100">
+            <main class="row overflow-auto">
+              <div class="container-fluid col">
+                <div class="px-lg-2 mx-lg-2 py-0 my-0">
+  
+                  <div class="container-fluid m-0 p-0">
+  
+                    <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+  
+                      <div class="container justify-content-center">
+                        <div class="container">
+  
+  
+                          <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+  
+  
+                            <!-- TÍTULO -->
+                        
+                            <div class="box-tittle">
+                                <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarDocente' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                                </button>
+                                <h3 id="titulo" style="margin-left: 20px; display: inline;">MODIFICAR DOCENTE</h3>
+                            
+                            </div>
+  
+                          <br>
+                          <br>                             
+                        
+                        
+                          <form class="row g-3" method="post" autocomplete="off">
+  
+                            {% csrf_token %}
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre completo:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                    value="{{ docente.0.0 }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="correo_electronico" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="correo_electronico"
+                                    name="correo_electronico" value="{{ docente.0.1 }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono:</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono"
+                                    value="{{ docente.0.2 }}" required pattern="[0-9]{9}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="especialidad" class="form-label">Especialidad:</label>
+                                <input type="text" class="form-control" id="especialidad" name="especialidad"
+                                    value="{{ docente.0.3 }}" required>
+                            </div>
+                            
+
+                            <div class="col-md-6">
+                                <label for="contrato" class="form-label">Tipo de contrato: </label>
+                                <select class="form-select" id="contrato" name="contrato" required>
+                                    {% for tc in tcs %}
+                                    <option value="{{ tc }}" {% if  tc  == docente.0.4 %}selected{% endif %}>{{ tc }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="departamento" class="form-label">Departamento: </label>
+                                <select class="form-select" id="departamento" name="departamento" required>
+                                    {% for dp in deps %}
+                                    <option value="{{ dp }}" {% if  dp  == docente.0.5 %}selected{% endif %}>{{ dp }}
+                                    </option>
+                                    {% endfor %}                             
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-check-label" for="estado">Estado: </label> 
+                                <input type="checkbox" class="form-check-input" id="estado" name="estado"
+                                    {% if docente.0.6 == 'D' %} checked {% endif %} style="height: 20px; width: 20px;">
+                                <input type="hidden" name="estado" value="{{docente.0.6}}"> 
+                            </div>
+              
+                              <div class="col-12" style="text-align: right;">
+                                <br>
+                                <button class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarDocente' %}'">Cancelar</button>
+                                <button type="submit" class="btnVer">Modificar</button>
+                              </div>
+              
+                          </form>
+                          
+                        
+                        
+                        </div>
+                      
+                        </div>                      
+                      </div>
+  
+                    </div>
+              </div>
+            </main>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+{% endblock %}
+{% block extra_js %}
+
+<script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('estado');
+    const hiddenInput = document.querySelector('input[name="estado"][type="hidden"]');
+    
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            hiddenInput.value = 'D'; 
+        } else {
+            hiddenInput.value = 'I'; 
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const contratoSelect = document.getElementById('contrato');
+    const tipoContrato = '{{ docente.0.4 }}';
+
+    // Seleccionar el tipo de contrato automáticamente
+    if (tipoContrato) {
+        contratoSelect.value = tipoContrato;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const contratoSelect = document.getElementById('departamento');
+    const tipoContrato = '{{ docente.0.5 }}';
+
+    // Seleccionar el tipo de contrato automáticamente
+    if (tipoContrato) {
+        contratoSelect.value = tipoContrato;
+    }
+});
+
+</script>
+
+{% endblock %}

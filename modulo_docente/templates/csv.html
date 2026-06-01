@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Subir CSV de disponibilidad docente{% endblock %}
+
+{% block content %}
+
+    <div class="col d-flex flex-column h-sm-100" style="background-color: #e8ebf1;">
+        <main class="row overflow-auto">
+          <div class="container-fluid col"> 
+            
+    <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: 560px; border-radius: 5px;">
+
+
+            
+     <!-- TÍTULO -->
+    
+     <div class="box-tittle">
+      <button type="button" class="regresarBtn">
+          <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+      </button>
+      <h3 id="titulo" style="margin-left: 20px;">DISPONIBILIDAD DOCENTE</h3>
+      <br><br>
+  </div>
+
+  <!-- FORMULARIO SUBIR DISPONIBILIDAD  -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+
+
+          <div class="col-sm-5">
+            {{ form.as_p }}
+
+          </div>
+
+          <div class="col-sm-6">
+         
+            <button type="submit" class="btnVer">Subir</button>
+          </div>
+
+        </div>
+        
+    </form>
+
+        
+    <div id="boxTabla" style="height: 305px; overflow-y: auto;">
+    
+      <table class="table" id="tabla">
+
+          <thead class="encabezado" style=" position: sticky; top: 0; z-index: 1; background-color: #E33439;">
+              <tr>
+                  <th scope="col" style="background-color: #E33439; color: #fff;width: 20%;">HORA INICIO </th>
+                  <th scope="col" style="background-color: #E33439; color: #fff; width: 20%;"> HORA FINAL</th>
+                  <th scope="col" style="background-color: #E33439; color: #fff;width: 20%;">DIA DE SEMANA</th>
+                  <th scope="col" style="background-color: #E33439; color: #fff;width: 40%;">DOCENTE</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              {% for d in disponibilidad %}
+
+              <tr>
+
+                  <td id="ini" style="text-align: center;">{{ d.0 }}</td>
+                  <td id="fin" style="text-align: center;" >{{ d.1 }}</td>
+                  <td id="dia" style="text-align: center;" >{{ d.2 }}</td>
+                  <td id="docente" style="text-align: center;">{{ d.3 }}</td>
+
+              </tr>
+              {% endfor %}
+          </tbody>
+
+      </table>
+
+  </div>
+
+        
+  
+          </div>           
+          </div>
+        </main>
+    </div>
+        </div>
+
+    </div>
+    
+    <!-- MODAL -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <label class="modal-title" id="modalTitulo">Mensaje</label>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: #fff;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+
+      <div class="modal-body" id="messageModalBody" style="font-family: 'Roboto', sans-serif;">
+¿      </div>
+      <div class="modal-footer">
+                        <button type="button" class="btnCancelar" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+{% endblock %}
+
+{% block extra_js %}
+
+
+  <!-- COMPLEMENTOS -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+<script>
+    var messages = [
+        {% for message in messages %}
+            "{{ message }}",
+        {% endfor %}
+    ];
+
+    $(document).ready(function() {
+    if (messages.length > 0) {
+        $('#messageModalBody').text(messages[0]);
+        $('#messageModal').modal('show');
+    }
+});
+</script>
+
+{% endblock %}
+

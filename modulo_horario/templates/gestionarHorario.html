@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Gestionar Horario{% endblock %}
+
+{% block content %}
+<div class="col d-flex flex-column h-sm-100">
+  <main class="row overflow-auto">
+    <div class="container-fluid col">
+      <div class="px-lg-2 mx-lg-2 py-0 my-0">
+        <div class="container-fluid m-0 p-0">
+          <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+            <div class="container justify-content-center">
+              <div class="container">
+
+                <div id="contenedorSub"
+                  style="padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px;">
+
+                  <div class="box-tittle">
+                    <button type="button" class="regresarBtn" style="border: none; background: none;">
+                      <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px"
+                          height="27px"></a>
+                    </button>
+                    <h3 id="titulo" style="margin-left: 20px; display: inline;">GESTIONAR HORARIO</h3>
+                  </div>
+
+                  <br>
+
+                  <form method="POST" id="form_filtros" class="row g-3 mb-4">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+  <select name="ciclo_ac" class="form-select" onchange="this.form.submit()">
+    <option value="">Seleccione Ciclo</option>
+    {% for c in ciclo_select %}
+      <option value="{{ c }}" {% if c|stringformat:"s" == ciclo_seleccionado %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div class="col-md-6">
+  <select name="esc" class="form-select" onchange="this.form.submit()">
+    <option value="">Seleccione Escuela</option>
+    {% for e in escuela_select %}
+      <option value="{{ e.nombre_escuela }}" {% if e.nombre_escuela == escuela_seleccionada %}selected{% endif %}>{{ e.nombre_escuela }}</option>
+    {% endfor %}
+  </select>
+</div>
+                  </form>
+
+                  <form method="POST" class="row g-3 p-3 bg-light border mb-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="ciclo_ac" value="{{ ciclo_seleccionado }}">
+                    <input type="hidden" name="esc" value="{{ escuela_seleccionada }}">
+                    <input type="hidden" name="action" value="nuevo">
+                    <input type="hidden" name="horid" id="horid">
+
+                    <div class="col-md-2">
+                      <select name="grid" class="form-select" required>
+                        <option value="">Grupo</option>
+                        {% for g in grupos %}<option value="{{g.id}}">{{g.grupo}} - {{g.fk_curso.nombre_curso}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select name="ambid" class="form-select" required>
+                        <option value="">Ambiente</option>
+                        {% for a in amb %}<option value="{{a.id}}">{{a.nombre_ambiente}}</option>{% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select name="diaid" class="form-select" required>
+                        <option value="">Día</option>
+                        {% for d in dias %}<option value="{{d.id}}">{{d.dia_nombre}}</option>{% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-2"><input type="time" name="hini" class="form-control" required></div>
+                    <div class="col-md-2"><input type="time" name="hfin" class="form-control" required></div>
+                    <div class="col-md-2"><button type="submit" class="btnVer" style="width: 120px;">Guardar</button>
+                    </div>
+                  </form>
+
+                  <div id="boxTabla" style="height: 340px; overflow-y: auto; text-align: center;">
+                    <table class="table" id="tabla">
+                      <thead class="encabezado"
+                        style="position: sticky; top: 0; z-index: 1; background-color: #E33439;">
+                        <tr>
+                          <th style="background-color: #E33439; color: #fff;">CURSO</th>
+                          <th style="background-color: #E33439; color: #fff;">DÍA</th>
+                          <th style="background-color: #E33439; color: #fff;">AMBIENTE</th>
+                          <th style="background-color: #E33439; color: #fff;">INICIO</th>
+                          <th style="background-color: #E33439; color: #fff;">FIN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for h in horarios %}
+                        <tr>
+                          <td>{{ h.fk_grupo_horario.fk_curso.nombre_curso }} - {{ h.fk_grupo_horario.grupo }}</td>
+                          <td>{{ h.día }}</td>
+                          <td>{{ h.ambiente }}</td>
+                          <td>{{ h.hora_de_inicio }}</td>
+                          <td>{{ h.hora_final }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

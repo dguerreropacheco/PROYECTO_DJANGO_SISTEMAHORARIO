@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Gestionar curso{% endblock %}
+
+{% block content %}
+
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+                      
+                          <div class="box-tittle">
+                              <button type="button" class="regresarBtn">
+                                  <a href="/inicio"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                              </button>
+                              <h3 id="titulo" style="margin-left: 20px; display: inline;">GESTIONAR CURSO</h3>
+                          
+                          </div>
+                        <br>
+                        <button  class="btnVer" onclick="window.location.href='{% url 'agregarCurso' %}'"> Agregar curso </button>
+                        <div class="col-md-12"  style="margin-left: 750px; margin-bottom: 16px; margin-top: -9px;">
+                          <input type="text" id="filtro" placeholder="Buscar curso" style="width: 300px; margin-left: -2px;">
+      
+                          <button type="button" id="limpiarBtn">
+                              <img id="closeicon" src="/static/iconos/close.jpeg" width="20" height="20">
+                          </button>
+                      </div>
+      
+                        <div id="boxTabla" style="height: 340px; overflow-y: auto;">
+                        
+                            <table class="table" id="tabla">
+                    
+                                <thead class="encabezado" style=" position: sticky; top: 0; z-index: 1; background-color: #E33439;">
+                                    <tr>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 10%;"> CODIGO </th>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 20%;"> NOMBRE </th>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 10%;"> CICLO</th>                                        
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width:10%;">  H.PRACTICAS</th>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 10%;"> H. TEORICAS</th>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 10%;"> PLAN DE ESTUDIO</th>
+                                        <th scope="col" style="background-color: #E33439; color: #fff;width: 10%;">ACCIONES</th>
+                                    </tr>
+                                </thead>
+                    
+                                <tbody>
+                                    {% for d in docentes %}
+                    
+                                    <tr>
+                    
+                                        <td id="codigo" style="text-align: center;">{{ d.0 }}</td>
+                                        <td id="nombre" style="text-align: left;" >{{ d.1 }}</td>
+                                        <td id="ciclo" style="text-align: center;" >{{ d.2 }}</td>
+                                        <td id="hp" style="text-align: center;">{{ d.3 }}</td>
+                                        <td id="ht" style="text-align: center;" >{{ d.4 }}</td>
+                                        <td id="plan" style="text-align: center;">{{ d.5 }}</td>
+                                        <td id="butns" style="text-align: center;">
+                                          <button class="btnmodif" id="{{ d.6 }}">
+                                            <i class="fa fa-pencil"></i> 
+                                        </button>
+                                        <button class="btndel" id="{{ d.6 }}"">
+                                            <i class="fa fa-trash"></i> 
+                                        </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                    
+                            </table>
+                    
+                        </div>
+  
+                        </div>
+                    
+                      </div>                      
+                    </div>
+
+                  </div>
+            </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}
+
+  {% block extra_js %}
+
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    var filtroInput = document.getElementById("filtro");
+    var limpiarBtn = document.getElementById("limpiarBtn");
+    var tabla = document.querySelector(".table");
+    var nombreColumnaIndex = 1; 
+
+    function filtrarTabla() {
+        var filtro = filtroInput.value.toLowerCase();
+        var filas = tabla.getElementsByTagName("tr");
+        
+        for (var i = 0; i < filas.length; i++) {
+            var celdaNombre = filas[i].getElementsByTagName("td")[nombreColumnaIndex];
+            if (celdaNombre) {
+                var textoCelda = celdaNombre.innerText.toLowerCase();
+                var fila = filas[i];
+                if (textoCelda.indexOf(filtro) > -1) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
+            }
+        }
+    }
+
+    filtroInput.addEventListener("keyup", filtrarTabla);
+
+    limpiarBtn.addEventListener("click", function() {
+        filtroInput.value = ""; 
+        filtrarTabla(); 
+    });
+    
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para redirigir a la página de modificación
+    document.querySelectorAll('.btnmodif').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.id;
+            window.location.href = `/modificarCurso/${id}/`;
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para redirigir a la página de modificación
+    document.querySelectorAll('.btndel').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.id;
+            window.location.href = `/eliminarCurso/${id}/`;
+        });
+    });
+});
+    </script>
+
+{% endblock %}

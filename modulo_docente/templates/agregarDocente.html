@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Agregar docente{% endblock %}
+
+{% block content %}
+
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+                      
+                          <div class="box-tittle">
+                              <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarDocente' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                              </button>
+                              <h3 id="titulo" style="margin-left: 20px; display: inline;">AGREGAR DOCENTE</h3>
+                          
+                          </div>
+
+                        <br>
+                        <br>                             
+                        <form class="row g-3" method="post" autocomplete="off">
+                          {% csrf_token %}
+
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre completo:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"  style="text-transform:uppercase;" value=""  onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+        
+        
+                            <div class="col-md-6">
+                                <label for="correo_electronico" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+
+                            
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono:</label>
+                                <input type="telefono" class="form-control" id="telefono" name="telefono" required pattern="^[0-9]{9}$" minlength="9" maxlength="9">
+
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="especialidad" class="form-label">Especialidad:</label>
+                              <input type="text" class="form-control" id="especialidad" name="especialidad" required>
+                          </div>
+            
+                            <div class="col-md-6">
+                                <label for="contrato" class="form-label">Tipo de contrato:</label>
+                                <select class="form-select" id="contrato" name="contrato" style="font-size: 15px;"  required>
+                                  {% for tc in tcs %}
+                                  <option value="{{ tc }}">{{ tc }}
+                                  </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="col-md-6">
+                                <label for="departamento" class="form-label">Departamento:</label>
+                                <select class="form-select" id="departamento" name="departamento" style="font-size: 15px;" required>
+                                  {% for dp in deps %}
+                                  <option value="{{ dp }}">{{ dp }}
+                                  </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                              
+                                <label for="estado" class="form-check-label" style="margin-top: 5px;">Estado:</label>
+                                <input type="checkbox" id="estado" name="estado" style="height: 20px; width: 20px;">
+
+                            </div>
+            
+                            <div class="col-12" style="text-align: right;">
+                                <br>
+                                <button class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarDocente' %}'">Cancelar</button>
+                                <button type="submit" class="btnVer">Guardar</button>
+                            </div>
+            
+                        </form>
+                        </div>
+                    
+                      </div>                      
+                    </div>
+
+                  </div>
+            </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {% endblock %}
+
+
+  {% block extra_js %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('estado');
+    const hiddenInput = document.querySelector('input[name="estado"]');
+    
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            hiddenInput.value = 'D'; 
+        } else {
+            hiddenInput.value = 'I'; 
+        }
+    });
+});
+
+    </script>
+
+{% endblock %}

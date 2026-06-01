@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Agregar curso{% endblock %}
+
+{% block content %}
+
+        <div class="col d-flex flex-column h-sm-100">
+          <main class="row overflow-auto">
+            <div class="container-fluid col">
+              <div class="px-lg-2 mx-lg-2 py-0 my-0">
+
+                <div class="container-fluid m-0 p-0">
+
+                  <div class="row align-items-center mx-0 px-0" style="overflow-x: hidden; margin-top: 35px;">
+
+                    <div class="container justify-content-center">
+                      <div class="container">
+
+
+                        <div id="contenedorSub" style=" padding: 20px; background-color: white; margin-top: 20px; height: auto; border-radius: 5px; ">
+
+
+                          <!-- TÍTULO -->
+                      
+                          <div class="box-tittle">
+                              <button type="button" class="regresarBtn">
+                                  <a href="{% url 'gestionarCurso' %}"><img id="closeicon" src="/static/iconos/regresar.PNG" width="32px" height="27px"></a>
+                              </button>
+                              <h3 id="titulo" style="margin-left: 20px; display: inline;">AGREGAR CURSO</h3>
+                          
+                          </div>
+
+                        <br>
+                        <br>                             
+                        <form class="row g-3" method="post" autocomplete="off" onsubmit="calcularSuma(event)">
+                          {% csrf_token %}
+
+                            <div class="col-md-6">
+                                <label for="codigo" class="form-label">Código:</label>
+                                <input type="text" class="form-control" id="codigo" name="codigo"  style="text-transform:uppercase;" value=""  onkeyup="javascript:this.value=this.value.toUpperCase();" required>
+                            </div>
+        
+        
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre:</label>
+                                <input type="nombre" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+
+                            
+                            <div class="col-md-6">
+                                <label for="hpracticas" class="form-label">Horas prácticas:</label>
+                                <input type="number" class="form-control" id="hpracticas" name="hpracticas" required>
+
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="hteoricas" class="form-label">Horas teóricas:</label>
+                              <input type="number" class="form-control" id="hteoricas" name="hteoricas" required>
+                          </div>
+
+                          <input type="hidden" id="hsuma" name="hsuma">
+
+            
+                            <div class="col-md-6">
+                                
+                              <label for="ciclo" class="form-label">Ciclo:</label>
+                              <input type="number" class="form-control" id="ciclo" name="ciclo" required>
+                            </div>
+            
+                            <div class="col-md-6">
+                                <label for="tcur" class="form-label">Tipo de curso:</label>
+                                <select class="form-select" id="tcur" name="tcur" style="font-size: 15px;" required>
+                                  {% for dp in ambs %}
+                                  <option value="{{ dp.0 }}">{{ dp.0 }}
+                                  </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                              
+                                <label for="plan" class="form-label">Plan de estudio:</label>
+                                <select class="form-select" id="plan" name="plan" style="font-size: 15px;" required>
+                                  {% for pl in tpas %}
+                                  <option value="{{ pl.0 }}">{{ pl.0 }}
+                                  </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="col-12" style="text-align: right;">
+                                <br>
+                                <button class="btnCancel" style="margin-right: 5px;" onclick="window.location.href='{% url 'gestionarCurso' %}'">Cancelar</button>
+                                <button type="submit" class="btnVer">Guardar</button>
+                            </div>
+            
+                        </form>
+                        </div>
+                    
+                      </div>                      
+                    </div>
+
+                  </div>
+            </div>
+          </main>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ {% endblock %}
+
+
+   {% block extra_js %}
+
+    <script>
+
+        function calcularSuma(event) {
+            event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+
+            var hpracticas = parseInt(document.getElementById('hpracticas').value, 10);
+            var hteoricas = parseInt(document.getElementById('hteoricas').value, 10);
+            
+            // Asegúrate de que las entradas sean válidas
+            if (isNaN(hpracticas)) hpracticas = 0;
+            if (isNaN(hteoricas)) hteoricas = 0;
+
+            var suma = hpracticas + hteoricas;
+            document.getElementById('hsuma').value = suma;
+
+            console.log("Horas prácticas:", hpracticas);
+            console.log("Horas teóricas:", hteoricas);
+            console.log("Suma de horas:", suma);
+
+            // Después de calcular la suma, envía el formulario
+            event.target.submit();
+        }
+    </script>
+
+{% endblock %}
