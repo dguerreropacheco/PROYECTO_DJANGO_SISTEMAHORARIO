@@ -21,7 +21,7 @@ Sistema de Gestión de Horarios para Docentes
 
 ## 👤 Mi rol en el proyecto
 
-- Modelado de base de datos relacional
+- Modelado de base de datos relacional.
 - Implementación de las interfaces y plantillas base.
 - Desarrollo de backend utilizando Django para funcionalidades como horarios, cursos, asignaciones.
 - Integración y despliegue de la aplicación.
