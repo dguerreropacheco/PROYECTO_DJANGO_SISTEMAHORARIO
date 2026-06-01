@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://railway.app'
+    'https://proyectodjangosistemahorario-production.up.railway.app',
 ]
 
 # Application definition
