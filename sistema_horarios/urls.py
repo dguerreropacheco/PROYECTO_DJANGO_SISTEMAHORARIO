@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from modulo_usuario import views
+
 
 urlpatterns = [
     
@@ -24,6 +26,8 @@ urlpatterns = [
     path('', include('modulo_horario.urls')),
     path('', include('modulo_docente.urls')),
     path('', include('modulo_curso.urls')),
-   path('', include('modulo_ambiente.urls')),
-    path('', include('modulo_usuario.urls'))
+    path('', include('modulo_ambiente.urls')),
+    path('', include('modulo_usuario.urls')),
+    path('login/', views.login_view, name='login'), 
+    path('registro/', views.registro_view, name='registro'),
 ]
