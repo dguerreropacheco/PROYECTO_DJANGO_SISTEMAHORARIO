@@ -1,28 +1,14 @@
-"""
-URL configuration for sistema_horarios project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
-
+from modulo_usuario import views  # Importamos las vistas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('modulo_horario.urls')),
-    path('', include('modulo_docente.urls')),
-    path('', include('modulo_curso.urls')),
-   path('', include('modulo_ambiente.urls')),
-    path('', include('modulo_usuario.urls'))
+    
+    path('', views.login_view, name='login'),
+    path('usuario/', include('modulo_usuario.urls')),
+    path('horario/', include('modulo_horario.urls')),
+    path('docente/', include('modulo_docente.urls')),
+    path('curso/', include('modulo_curso.urls')),
+    path('ambiente/', include('modulo_ambiente.urls')),
 ]
