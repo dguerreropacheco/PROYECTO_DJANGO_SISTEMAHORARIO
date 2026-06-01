@@ -108,9 +108,15 @@ if IS_PRODUCTION:
         'default': dj_database_url.config(
             default=os.environ.get('MYSQL_URL'),
             conn_max_age=600,
-            ssl_config={'ssl_mode': 'required'}
+            ssl_config={'ssl_mode': 'required'
+                        
+                        }
         )
     }
+    DATABASES['default']['OPTIONS'] = {
+        'ssl': {'ca': None}  
+    }
+   
 else:
     DATABASES = {
         'default': {
